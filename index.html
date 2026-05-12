@@ -66,8 +66,8 @@
   .menu-btn:hover .price { color: rgba(255,255,255,0.85); }
 
   /* 기타 버튼 */
-  .etc-area { padding: 0 14px 10px; display: flex; gap: 7px; flex-shrink: 0; background: var(--bg); }
-  .qbtn { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 6px 13px; font-size: 12px; font-weight: 500; color: var(--text-sub); cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .etc-area { padding: 0 14px 10px; display: flex; gap: 6px; flex-shrink: 0; background: var(--bg); flex-wrap: nowrap; }
+  .qbtn { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 6px 8px; font-size: 11px; font-weight: 500; color: var(--text-sub); cursor: pointer; font-family: inherit; transition: all 0.15s; white-space: nowrap; flex: 1; text-align: center; }
   .qbtn:hover { border-color: var(--primary); color: var(--primary-dark); }
 
   /* 입력 */
@@ -110,6 +110,27 @@
     <button class="qbtn" onclick="quick('사이드 메뉴 알려줘')">🧀 사이드 메뉴</button>
     <button class="qbtn" onclick="quick('품질이 어때?')">✅ 품질 철학</button>
     <button class="qbtn" onclick="quick('메뉴 전체 보여줘')">📋 전체 메뉴</button>
+    <button class="qbtn" onclick="showMapModal()">🗺️ 오시는길</button>
+  </div>
+
+  <!-- 지도 선택 모달 -->
+  <div id="mapModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:flex-end;justify-content:center;">
+    <div style="background:#fff;border-radius:20px 20px 0 0;padding:24px 20px 32px;width:100%;max-width:420px;">
+      <div style="text-align:center;margin-bottom:6px;font-size:16px;font-weight:700;color:#2C1A0E;">🗺️ 오시는길</div>
+      <div style="text-align:center;font-size:13px;color:#8B6A4E;margin-bottom:20px;">경기도 김포시 초당로61번길 20-4</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <a href="tmap://search?name=마니산닭강정김포직영점&lon=126.7153&lat=37.6151" onclick="tryTmap(event)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;border:1.5px solid #F0E6D3;text-decoration:none;color:#2C1A0E;font-weight:600;font-size:14px;">
+          <span style="font-size:24px;">🅣</span><span>Tmap으로 열기</span>
+        </a>
+        <a href="kakaomap://place?q=경기도+김포시+초당로61번길+20-4" onclick="tryKakao(event)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;border:1.5px solid #F0E6D3;text-decoration:none;color:#2C1A0E;font-weight:600;font-size:14px;">
+          <span style="font-size:24px;">🟡</span><span>카카오맵으로 열기</span>
+        </a>
+        <a href="nmap://search?query=경기도+김포시+초당로61번길+20-4&appname=com.manisan.chatbot" onclick="tryNaver(event)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;border:1.5px solid #F0E6D3;text-decoration:none;color:#2C1A0E;font-weight:600;font-size:14px;">
+          <span style="font-size:24px;">🟢</span><span>네이버지도로 열기</span>
+        </a>
+      </div>
+      <button onclick="closeMapModal()" style="width:100%;margin-top:16px;padding:13px;border-radius:14px;border:none;background:#F5F5F5;font-size:14px;font-weight:600;color:#8B6A4E;cursor:pointer;font-family:inherit;">닫기</button>
+    </div>
   </div>
 
   <div class="input-area">
@@ -341,6 +362,39 @@ function send() {
 }
 
 // 첫 인사
+function showMapModal() {
+  const modal = document.getElementById('mapModal');
+  modal.style.display = 'flex';
+}
+function closeMapModal() {
+  document.getElementById('mapModal').style.display = 'none';
+}
+// 모달 바깥 클릭 시 닫기
+document.getElementById('mapModal').addEventListener('click', function(e) {
+  if (e.target === this) closeMapModal();
+});
+// Tmap 앱 없으면 웹으로
+function tryTmap(e) {
+  closeMapModal();
+  setTimeout(() => {
+    window.open('https://tmap.life/find-place?name=마니산닭강정김포직영점&lat=37.6151&lon=126.7153', '_blank');
+  }, 2000);
+}
+// 카카오맵 앱 없으면 웹으로
+function tryKakao(e) {
+  closeMapModal();
+  setTimeout(() => {
+    window.open('https://map.kakao.com/link/search/경기도 김포시 초당로61번길 20-4', '_blank');
+  }, 2000);
+}
+// 네이버지도 앱 없으면 웹으로
+function tryNaver(e) {
+  closeMapModal();
+  setTimeout(() => {
+    window.open('https://map.naver.com/v5/search/경기도 김포시 초당로61번길 20-4', '_blank');
+  }, 2000);
+}
+
 addMsg('안녕하세요! 🍗 <strong>마니산닭강정 김포직영점</strong>입니다.<br>아래 메뉴를 눌러 바로 주문하거나, 궁금한 점을 물어보세요 😊', 'bot');
 </script>
 </body>
