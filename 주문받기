@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마니산 닭강정 김포점 주문 챗봇</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #EF9F27;
+    --primary-dark: #d4861a;
+    --primary-light: #FAEEDA;
+    --bg: #FDF8F0;
+    --surface: #FFFFFF;
+    --border: #F0E6D3;
+    --text: #2C1A0E;
+    --text-sub: #8B6A4E;
+    --bot-bubble: #FFFFFF;
+    --user-bubble: #EF9F27;
+    --user-text: #2C1A0E;
+    --radius: 18px;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .chat-container {
+    width: 100%;
+    max-width: 420px;
+    background: var(--surface);
+    border-radius: 24px;
+    box-shadow: 0 8px 40px rgba(239,159,39,0.15), 0 2px 8px rgba(0,0,0,0.06);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    max-height: 760px;
+  }
+
+  /* 헤더 */
+  .header {
+    background: var(--primary);
+    padding: 18px 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+  .header-avatar {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .header-info .store-name {
+    font-size: 15px; font-weight: 700; color: #fff;
+    line-height: 1.3;
+  }
+  .header-info .store-sub {
+    font-size: 12px; color: rgba(255,255,255,0.85);
+    margin-top: 2px;
+  }
+  .header-badge {
+    margin-left: auto;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px; color: #fff; font-weight: 500;
+    display: flex; align-items: center; gap: 5px;
+    flex-shrink: 0;
+  }
+  .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #7FE87F; }
+
+  /* 메시지 영역 */
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 16px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+  }
+  .messages::-webkit-scrollbar { width: 4px; }
+  .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .msg { display: flex; gap: 8px; align-items: flex-end; }
+  .msg.bot { flex-direction: row; }
+  .msg.user { flex-direction: row-reverse; }
+
+  .bot-icon {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--primary-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+
+  .bubble {
+    padding: 11px 15px;
+    border-radius: var(--radius);
+    font-size: 14px; line-height: 1.65;
+    max-width: 78%;
+    color: var(--text);
+    word-break: keep-all;
+  }
+  .bot .bubble {
+    background: var(--bot-bubble);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .user .bubble {
+    background: var(--user-bubble);
+    color: var(--user-text);
+    border-bottom-right-radius: 4px;
+    font-weight: 500;
+  }
+
+  /* 타이핑 애니메이션 */
+  .typing-wrap { display: flex; gap: 8px; align-items: flex-end; }
+  .typing-bubble {
+    background: var(--bot-bubble);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    border-bottom-left-radius: 4px;
+    padding: 14px 18px;
+    display: flex; gap: 5px; align-items: center;
+  }
+  .typing-bubble span {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--primary);
+    animation: bounce 1.2s infinite;
+    display: block;
+  }
+  .typing-bubble span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-bubble span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%,60%,100% { transform: translateY(0); }
+    30% { transform: translateY(-6px); }
+  }
+
+  /* 빠른 버튼 */
+  .quick-area {
+    padding: 8px 16px 10px;
+    display: flex; flex-wrap: wrap; gap: 7px;
+    flex-shrink: 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .qbtn {
+    background: var(--surface);
+    border: 1.5px solid var(--primary);
+    border-radius: 20px;
+    padding: 6px 13px;
+    font-size: 13px; font-weight: 500;
+    color: var(--primary-dark);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s;
+  }
+  .qbtn:hover { background: var(--primary); color: #fff; }
+
+  /* 입력 영역 */
+  .input-area {
+    padding: 12px 16px 16px;
+    display: flex; gap: 10px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .input-area input {
+    flex: 1;
+    padding: 11px 16px;
+    border-radius: 24px;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    font-size: 14px;
+    color: var(--text);
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .input-area input:focus { border-color: var(--primary); }
+  .input-area input::placeholder { color: var(--text-sub); }
+  .send-btn {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: var(--primary);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .send-btn:hover { background: var(--primary-dark); }
+  .send-btn:active { transform: scale(0.93); }
+  .send-btn svg { width: 18px; height: 18px; fill: white; }
+</style>
+</head>
+<body>
+
+<div class="chat-container">
+  <div class="header">
+    <div class="header-avatar">🍗</div>
+    <div class="header-info">
+      <div class="store-name">마니산 닭강정 김포점</div>
+      <div class="store-sub">주문 · 예약 · 메뉴 안내</div>
+    </div>
+    <div class="header-badge">
+      <div class="online-dot"></div>
+      운영중
+    </div>
+  </div>
+
+  <div class="messages" id="msgs"></div>
+
+  <div class="quick-area" id="quickArea">
+    <button class="qbtn" onclick="quick('메뉴 알려줘')">🍗 메뉴 보기</button>
+    <button class="qbtn" onclick="quick('주문할게요')">🛒 주문하기</button>
+    <button class="qbtn" onclick="quick('따뜻한 강정은?')">🔥 따뜻한 강정</button>
+    <button class="qbtn" onclick="quick('사이드 메뉴 뭐 있어?')">🧀 사이드 메뉴</button>
+    <button class="qbtn" onclick="quick('품질이 어때?')">✅ 품질 철학</button>
+  </div>
+
+  <div class="input-area">
+    <input type="text" id="inp" placeholder="메뉴, 주문, 예약 문의..." onkeydown="if(event.key==='Enter')send()" />
+    <button class="send-btn" onclick="send()">
+      <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+const WEBHOOK = "https://script.google.com/macros/s/AKfycbzm-xeCaiZ33Ri66ye3XtE8M-R30oreqI9LkNvmFl8x-CtCcUAk9p2PFpXeTYpQsrmlhw/exec";
+
+const SYSTEM = `당신은 "마니산 닭강정 김포점(직영점)"의 주문 AI 챗봇입니다. 친절하고 간결하게 안내하세요. 이모지를 적절히 사용하되 답변은 너무 길지 않게 해주세요.
+
+[매장 정보]
+- 매장명: 마니산 닭강정 김포점 (직영점)
+- 본점: 강화점 (별도 매장)
+
+[메뉴 및 가격]
+▶ 메인 메뉴
+1. 닭강정 기본: 22,000원 / 중: 17,000원 (식힘공정, 바삭한 식감이 기본)
+2. 따뜻한 닭강정: 닭강정 가격 +2,000원 (별도 옵션)
+3. 순살 후라이드 기본: 21,000원 / 중: 17,000원
+
+▶ 사이드 메뉴 (김포점 전용)
+4. 케이준 감자튀김 일반: 5,500원
+5. 케이준 감자튀김 허니버터맛: 6,000원
+6. 케이준 감자튀김 치즈맛: 6,000원
+7. 치즈볼: 5,500원
+8. 치즈뿌린 치즈볼: 6,000원
+9. 웅녀떡볶이: 6,000원
+
+[품질 철학]
+- 매일 새 기름 사용 (전날 기름 상태 무관 폐기)
+- 매일 마감 튀김기 청소
+- 당일생산 당일판매 원칙
+- "내 가족도 안심하고 먹을 수 있는 음식"
+
+[주문 처리 방식]
+고객이 주문을 원하면 아래 순서로 정보를 수집하세요:
+1. 메뉴와 수량 확인
+2. 픽업 예약 시간 확인
+3. 고객 이름 확인
+4. 연락처 확인
+5. 전체 주문 내역과 합계금액을 정리해서 보여주고 "주문확정" 여부를 물어보세요.
+
+고객이 "주문확정" 또는 "확정"이라고 하면 아래 JSON 포맷으로만 응답하세요 (다른 텍스트 없이):
+{"confirm":true,"고객이름":"...","연락처":"...","예약시간":"...","주문메뉴":"...","합계금액":"...원"}
+
+주문 확정 전까지는 절대 JSON을 출력하지 마세요.`;
+
+let history = [];
+const msgsEl = document.getElementById('msgs');
+const inp = document.getElementById('inp');
+
+function addMsg(html, role) {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  const icon = role === 'bot' ? `<div class="bot-icon">🤖</div>` : '';
+  const side = role === 'bot' ? icon + `<div class="bubble">${html}</div>` : `<div class="bubble">${html}</div>`;
+  div.innerHTML = side;
+  msgsEl.appendChild(div);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'msg bot'; div.id = 'typing';
+  div.innerHTML = `<div class="bot-icon">🤖</div><div class="typing-bubble"><span></span><span></span><span></span></div>`;
+  msgsEl.appendChild(div);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+function removeTyping() { const t = document.getElementById('typing'); if(t) t.remove(); }
+
+async function sendToSheet(order) {
+  const now = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const timeStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  try {
+    await fetch(WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        주문시간: timeStr,
+        예약시간: order.예약시간,
+        고객이름: order.고객이름,
+        연락처: order.연락처,
+        주문메뉴: order.주문메뉴,
+        합계금액: order.합계금액,
+      }),
+      mode: 'no-cors'
+    });
+  } catch(e) {}
+}
+
+async function ask(userText) {
+  history.push({ role: 'user', content: userText });
+  showTyping();
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM,
+        messages: history
+      })
+    });
+    const data = await resp.json();
+    removeTyping();
+    const reply = data.content?.find(b => b.type === 'text')?.text || '잠시 후 다시 시도해 주세요.';
+    history.push({ role: 'assistant', content: reply });
+
+    try {
+      const parsed = JSON.parse(reply.trim());
+      if (parsed.confirm === true) {
+        await sendToSheet(parsed);
+        addMsg(`✅ <strong>주문이 완료됐어요!</strong><br><br>📋 ${parsed.주문메뉴}<br>⏰ 픽업 예약: ${parsed.예약시간}<br>👤 ${parsed.고객이름}님 (${parsed.연락처})<br>💰 합계: ${parsed.합계금액}<br><br>맛있게 준비할게요! 감사합니다 🍗`, 'bot');
+        return;
+      }
+    } catch(e) {}
+
+    addMsg(reply.replace(/\n/g,'<br>'), 'bot');
+  } catch(e) {
+    removeTyping();
+    addMsg('연결에 문제가 생겼어요. 잠시 후 다시 시도해 주세요.', 'bot');
+  }
+}
+
+function quick(text) { addMsg(text, 'user'); ask(text); }
+function send() {
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  addMsg(text, 'user');
+  ask(text);
+}
+
+// 첫 인사
+addMsg('안녕하세요! 🍗 <strong>마니산 닭강정 김포점</strong>입니다.<br>메뉴 안내, 주문, 픽업 예약 모두 여기서 도와드려요 😊<br>무엇을 도와드릴까요?', 'bot');
+</script>
+</body>
+</html>
