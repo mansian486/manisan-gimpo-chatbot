@@ -67,7 +67,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);min-height:100vh
 .cart-clear{font-size:11px;color:var(--sub);cursor:pointer;border:none;background:none;font-family:inherit}
 .warm-opt-btn{background:var(--light);border:1px solid var(--primary);border-radius:8px;padding:2px 7px;font-size:10px;font-weight:600;color:var(--dark);cursor:pointer;margin-top:3px;display:inline-block;white-space:nowrap}
 .warm-opt-btn:hover{background:var(--primary);color:#fff}
-.cart-items{padding:0 14px;display:flex;flex-direction:column;gap:6px;max-height:65px;overflow-y:auto}
+.cart-items{padding:0 14px;display:flex;flex-direction:column;gap:6px;overflow-y:visible}
 .cart-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)}
 .cart-item:last-child{border-bottom:none}
 .ci-name{flex:1;font-size:13px;color:var(--text);font-weight:500}
@@ -209,7 +209,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);min-height:100vh
   </div>
 
   <div class="inp-area">
-    <input type="text" id="inp" placeholder="픽업예약 시간을 알려주세요!" onkeydown="if(event.key==='Enter')send()">
+    <input type="text" id="inp" placeholder="메뉴를 고른후에 주문하기를 눌러주세요" onkeydown="if(event.key==='Enter')send()">
     <button class="send" onclick="send()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
   </div>
 </div>
@@ -317,6 +317,15 @@ function renderCart() {
   countEl.textContent = totalQty;
   totalEl.textContent = totalAmt.toLocaleString();
 
+  // 아이템 수에 따라 cart-items 높이 동적 설정 (스크롤 없이 다 보이게)
+  // 닭강정(warm버튼 있는것): ~62px, 일반: ~40px
+  const estimatedHeight = cart.reduce((sum, item) => {
+    const isChicken = item.name.includes('닭강정') && !item.name.includes('따뜻한옵션');
+    return sum + (isChicken ? 64 : 42);
+  }, cart.length * 6); // gap 포함
+  itemsEl.style.maxHeight = estimatedHeight + 'px';
+  itemsEl.style.overflowY = 'visible';
+
   itemsEl.innerHTML = cart.map((item, idx) => {
     const isChicken = item.name.includes('닭강정') && !item.name.includes('따뜻한옵션');
     const warmBtn = isChicken ? `<button class="warm-opt-btn" onclick="addWarmOption(${idx})">🔥따뜻한강정 +2,000원</button>` : '';
@@ -415,18 +424,26 @@ async function finalOrder() {
   } catch(e) {}
   // 주문완료 메시지 + 스크린샷 버튼
   const orderSummary = `
-    <div id="orderResult" style="background:#fff8ee;border-radius:14px;padding:14px;margin-bottom:10px">
-      <div style="font-size:15px;font-weight:700;color:#2C1A0E;margin-bottom:8px">✅ 주문 완료!</div>
-      <div style="font-size:13px;color:#2C1A0E;line-height:1.8">
-        🍗 ${orderState.menuText.split(', ').join('<br>🍗 ')}<br>
-        ⏰ 픽업: ${orderState.time}<br>
-        👤 ${orderState.name}님<br>
-        💰 합계: ${orderState.total.toLocaleString()}원
+    <div id="orderResult" style="background:#fff8ee;border-radius:14px;padding:16px;margin-bottom:10px;border:1.5px solid #F0E6D3;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #F0E6D3;">
+        <div style="font-size:22px">🍗</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#2C1A0E">마니산닭강정 김포직영점</div>
+          <div style="font-size:11px;color:#8B6A4E">070-4110-9480</div>
+        </div>
+      </div>
+      <div style="font-size:15px;font-weight:700;color:#EF9F27;margin-bottom:10px">✅ 주문 완료!</div>
+      <div style="font-size:13px;color:#2C1A0E;line-height:2;background:#fff;border-radius:10px;padding:10px 12px;">
+        ${orderState.menuText.split(', ').map(m=>`<div>🍗 ${m}</div>`).join('')}
+        <div style="margin-top:6px;padding-top:6px;border-top:1px dashed #F0E6D3;">⏰ 픽업: <strong>${orderState.time}</strong></div>
+        <div>👤 <strong>${orderState.name}</strong>님</div>
+        <div>📱 ${orderState.phone}</div>
+        <div style="margin-top:4px;font-size:14px;font-weight:700;color:#EF9F27;">💰 합계: ${orderState.total.toLocaleString()}원</div>
       </div>
       <div style="margin-top:12px;padding:10px;background:#EF9F27;border-radius:10px;text-align:center;font-size:13px;font-weight:700;color:#2C1A0E">
         🏪 매장에서 키오스크로 결제해 주세요
       </div>
-      <div style="margin-top:8px;font-size:13px;color:#8B6A4E;text-align:center">맛있게 준비할게요! 감사합니다 😊🍗</div>
+      <div style="margin-top:8px;font-size:12px;color:#8B6A4E;text-align:center">맛있게 준비할게요! 감사합니다 😊🍗</div>
     </div>
     <button onclick="takeScreenshot()" style="width:100%;padding:11px;border-radius:12px;border:1.5px solid #EF9F27;background:#fff;font-size:13px;font-weight:700;color:#d4861a;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px">
       📸 주문내역 스크린샷 저장
@@ -443,7 +460,7 @@ async function finalOrder() {
   orderState = null;
 
   // placeholder 원래대로
-  document.getElementById('inp').placeholder = '픽업예약 시간을 알려주세요!';
+  document.getElementById('inp').placeholder = '메뉴를 고른후에 주문하기를 눌러주세요';
 
   // 장바구니 UI 복원
   const cartElR = document.getElementById('cart');
@@ -569,11 +586,15 @@ async function ask(text) {
 }
 
 function takeScreenshot() {
-  const target = document.querySelector('.wrap');
+  const target = document.getElementById('orderResult');
+  if (!target) {
+    alert('주문완료 화면을 찾을 수 없어요.');
+    return;
+  }
   html2canvas(target, {
-    scale: 2,
+    scale: 3,
     useCORS: true,
-    backgroundColor: '#FDF8F0'
+    backgroundColor: '#fff8ee',
   }).then(canvas => {
     const link = document.createElement('a');
     link.download = '마니산닭강정_주문내역.png';
