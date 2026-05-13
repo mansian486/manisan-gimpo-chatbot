@@ -16,8 +16,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);min-height:100vh
 .wrap{width:100%;max-width:420px;background:var(--surface);border-radius:24px;box-shadow:0 8px 40px rgba(239,159,39,0.15);overflow:hidden;display:flex;flex-direction:column;height:90vh;max-height:900px}
 
 /* 헤더 */
-.header{background:var(--primary);padding:14px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0}
-.logo{width:46px;height:46px;border-radius:50%;overflow:hidden;background:#fff;flex-shrink:0}
+.header{background:var(--primary);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo{width:38px;height:38px;border-radius:50%;overflow:hidden;background:#fff;flex-shrink:0}
 .logo img{width:100%;height:100%;object-fit:cover}
 .hinfo .name{font-size:14px;font-weight:700;color:#fff;line-height:1.3}
 .hinfo .sub{font-size:11px;color:rgba(255,255,255,0.85);margin-top:2px}
@@ -28,11 +28,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);min-height:100vh
 .dot{width:6px;height:6px;border-radius:50%;background:#7FE87F}
 
 /* 영업시간 */
-.banner{background:#fff8ee;border-bottom:1px solid var(--border);padding:7px 16px;font-size:12px;color:var(--sub);flex-shrink:0}
+.banner{background:#fff8ee;border-bottom:1px solid var(--border);padding:5px 14px;font-size:11px;color:var(--sub);flex-shrink:0}
 .banner strong{color:var(--text)}
 
 /* 메시지 */
-.msgs{flex:1;overflow-y:auto;padding:16px 16px 8px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+.msgs{flex:1;overflow-y:auto;padding:12px 14px 8px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;min-height:0}
 .msgs::-webkit-scrollbar{width:4px}
 .msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 .msg{display:flex;gap:8px;align-items:flex-end}
@@ -61,11 +61,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);min-height:100vh
 /* 장바구니 */
 .cart{margin:0;border-top:1px solid var(--border);background:#fff;flex-shrink:0;display:none}
 .cart.visible{display:block}
-.cart-header{padding:10px 14px 6px;display:flex;align-items:center;justify-content:space-between}
+.cart-header{padding:7px 14px 4px;display:flex;align-items:center;justify-content:space-between}
 .cart-title{font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px}
 .cart-badge{background:var(--primary);color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
 .cart-clear{font-size:11px;color:var(--sub);cursor:pointer;border:none;background:none;font-family:inherit}
-.cart-items{padding:0 14px;display:flex;flex-direction:column;gap:6px;max-height:130px;overflow-y:auto}
+.warm-opt-btn{background:var(--light);border:1px solid var(--primary);border-radius:8px;padding:2px 7px;font-size:10px;font-weight:600;color:var(--dark);cursor:pointer;margin-top:3px;display:inline-block;white-space:nowrap}
+.warm-opt-btn:hover{background:var(--primary);color:#fff}
+.cart-items{padding:0 14px;display:flex;flex-direction:column;gap:6px;max-height:65px;overflow-y:auto}
 .cart-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)}
 .cart-item:last-child{border-bottom:none}
 .ci-name{flex:1;font-size:13px;color:var(--text);font-weight:500}
@@ -74,40 +76,40 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);min-height:100vh
 .qty-btn{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);font-weight:700;flex-shrink:0}
 .qty-btn:hover{border-color:var(--primary);background:var(--light)}
 .qty-num{font-size:13px;font-weight:700;color:var(--text);min-width:16px;text-align:center}
-.cart-footer{padding:8px 14px 10px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);margin-top:6px}
+.cart-footer{padding:6px 14px 8px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);margin-top:4px}
 .cart-total{font-size:14px;font-weight:700;color:var(--text)}
 .cart-total span{color:var(--primary)}
 .order-btn{background:var(--primary);color:var(--text);border:none;border-radius:20px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
 .order-btn:hover{background:var(--dark)}
 
 /* 메인메뉴 그리드 */
-.grid{padding:10px 14px 6px;display:grid;grid-template-columns:1fr 1fr;gap:8px;flex-shrink:0;border-top:1px solid var(--border);background:var(--bg)}
+.grid{padding:6px 14px 4px;display:grid;grid-template-columns:1fr 1fr;gap:5px;flex-shrink:0;border-top:1px solid var(--border);background:var(--bg)}
 .mbtn{background:var(--surface);border:1.5px solid var(--primary);border-radius:14px;padding:0;font-size:13px;font-weight:600;color:var(--dark);cursor:pointer;font-family:inherit;transition:all .15s;text-align:left;overflow:hidden;display:flex;align-items:center;gap:0}
 .mbtn:hover{background:var(--light)}
-.mbtn .mimg{width:52px;height:52px;object-fit:cover;flex-shrink:0}
-.mbtn .minfo{padding:6px 8px}
-.mbtn .mname{font-size:12px;font-weight:700;color:var(--text);display:block}
-.mbtn .mprice{font-size:11px;font-weight:400;color:var(--sub);display:block;margin-top:1px}
+.mbtn .mimg{width:36px;height:36px;object-fit:cover;flex-shrink:0}
+.mbtn .minfo{padding:4px 6px}
+.mbtn .mname{font-size:11px;font-weight:700;color:var(--text);display:block}
+.mbtn .mprice{font-size:10px;font-weight:400;color:var(--sub);display:block;margin-top:1px}
 
 /* 사이드메뉴 토글 */
-.side-wrap{padding:0 14px 6px;flex-shrink:0;background:var(--bg)}
+.side-wrap{padding:0 14px 4px;flex-shrink:0;background:var(--bg)}
 .side-toggle{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:9px 14px;font-size:13px;font-weight:600;color:var(--sub);cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:space-between;transition:all .15s}
 .side-toggle:hover{border-color:var(--primary);color:var(--dark)}
 .arrow{transition:transform .3s;display:inline-block}
 .side-toggle.open .arrow{transform:rotate(180deg)}
-.side-list{display:none;flex-direction:column;gap:5px;margin-top:6px}
+.side-list{display:none;flex-direction:column;gap:4px;margin-top:4px}
 .side-list.open{display:flex}
-.sbtn{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:9px 14px;font-size:13px;font-weight:500;color:var(--text);cursor:pointer;font-family:inherit;display:flex;justify-content:space-between;align-items:center;transition:all .15s}
+.sbtn{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:6px 12px;font-size:12px;font-weight:500;color:var(--text);cursor:pointer;font-family:inherit;display:flex;justify-content:space-between;align-items:center;transition:all .15s}
 .sbtn:hover{border-color:var(--primary);background:var(--light)}
 .sbtn .sprice{font-size:12px;color:var(--sub)}
 
 /* 기타버튼 */
-.etc{padding:0 14px 8px;display:flex;gap:6px;flex-shrink:0;background:var(--bg)}
+.etc{padding:0 14px 5px;display:flex;gap:6px;flex-shrink:0;background:var(--bg)}
 .qbtn{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:6px 8px;font-size:11px;font-weight:500;color:var(--sub);cursor:pointer;font-family:inherit;white-space:nowrap;flex:1;text-align:center}
 .qbtn:hover{border-color:var(--primary);color:var(--dark)}
 
 /* 입력창 */
-.inp-area{padding:8px 14px 14px;display:flex;gap:10px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0}
+.inp-area{padding:7px 14px 10px;display:flex;gap:8px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0}
 .inp-area input{flex:1;padding:10px 16px;border-radius:24px;border:1.5px solid var(--border);background:var(--bg);font-size:14px;color:var(--text);font-family:inherit;outline:none;transition:border-color .2s}
 .inp-area input:focus{border-color:var(--primary)}
 .inp-area input::placeholder{color:var(--sub)}
@@ -160,7 +162,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);min-height:100vh
   <!-- 메인메뉴 토글 -->
   <div style="padding:6px 14px 0;background:var(--bg);flex-shrink:0">
     <button id="menuToggle" onclick="toggleMenu()" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--sub);cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:space-between;transition:all .15s">
-      🍗 메뉴 보기/접기 <span id="menuArrow" style="transition:transform .3s;display:inline-block">▼</span>
+      🍗 메뉴 보기/접기 <span id="menuArrow" style="transition:transform .3s;display:inline-block;transform:rotate(180deg)">▼</span>
     </button>
   </div>
 
@@ -207,7 +209,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);min-height:100vh
   </div>
 
   <div class="inp-area">
-    <input type="text" id="inp" placeholder="궁금한 점을 입력하세요..." onkeydown="if(event.key==='Enter')send()">
+    <input type="text" id="inp" placeholder="픽업예약 시간을 알려주세요!" onkeydown="if(event.key==='Enter')send()">
     <button class="send" onclick="send()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
   </div>
 </div>
@@ -251,11 +253,6 @@ const inpEl = document.getElementById('inp');
 
 // ── 장바구니 ──
 function addCart(name, price) {
-  // 닭강정이면 따뜻한옵션 먼저 물어보기
-  if (name.includes('닭강정')) {
-    showWarmOption(name, price);
-    return;
-  }
   pushCart(name, price);
 }
 
@@ -269,6 +266,16 @@ function showWarmOption(name, price) {
       onNo: () => { pushCart(name, price); }
     }
   );
+}
+
+function addWarmOption(idx) {
+  const item = cart[idx];
+  if (!item) return;
+  // 기존 아이템 가격에 2000원 추가, 이름에 따뜻한옵션 표기
+  item.price += 2000;
+  item.name = item.name + ' (따뜻한옵션)';
+  renderCart();
+  addBot('🔥 따뜻한 강정 옵션(+2,000원)이 추가됐어요!');
 }
 
 function pushCart(name, price) {
@@ -310,17 +317,21 @@ function renderCart() {
   countEl.textContent = totalQty;
   totalEl.textContent = totalAmt.toLocaleString();
 
-  itemsEl.innerHTML = cart.map((item, idx) => `
-    <div class="cart-item">
-      <div class="ci-name">${item.name}</div>
+  itemsEl.innerHTML = cart.map((item, idx) => {
+    const isChicken = item.name.includes('닭강정') && !item.name.includes('따뜻한옵션');
+    const warmBtn = isChicken ? `<button class="warm-opt-btn" onclick="addWarmOption(${idx})">🔥따뜻한강정 +2,000원</button>` : '';
+    return `
+    <div class="cart-item" style="${isChicken ? 'flex-wrap:wrap;' : ''}">
+      <div class="ci-name" style="flex:1;min-width:0">${item.name}</div>
       <div class="ci-price">${item.price.toLocaleString()}원</div>
       <div class="qty-ctrl">
         <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
         <span class="qty-num">${item.qty}</span>
         <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
       </div>
-    </div>
-  `).join('');
+      ${isChicken ? `<div style="width:100%;padding-bottom:4px">${warmBtn}</div>` : ''}
+    </div>`;
+  }).join('');
 }
 
 function startOrder() {
@@ -331,14 +342,27 @@ function startOrder() {
 
   // 메뉴 강제로 숨기기
   document.getElementById('menuGrid').style.display = 'none';
-  document.getElementById('menuArrow').style.transform = 'rotate(180deg)';
+  document.getElementById('menuArrow').style.transform = 'rotate(0deg)';
 
   // 사이드메뉴 강제로 숨기기
   document.getElementById('sideList').style.display = 'none';
   document.getElementById('sideList').classList.remove('open');
   document.getElementById('sideArrow').style.transform = 'rotate(0deg)';
 
-  addBot(`📋 <strong>주문 내역</strong><br>${cart.map(i=>`🍗 ${i.name} x${i.qty} (${(i.price*i.qty).toLocaleString()}원)`).join('<br>')}<br><br>💰 합계: <strong>${total.toLocaleString()}원</strong><br><br>⏰ 픽업 예약 시간을 알려주세요!<br><small style="color:#8B6A4E">예) 오후 3시, 15:30</small>`);
+  // 장바구니 접기 + 금액만 표기
+  const cartEl = document.getElementById('cart');
+  const cartFooterEl = cartEl ? cartEl.querySelector('.cart-footer') : null;
+  const cartItemsEl = cartEl ? cartEl.querySelector('.cart-items') : null;
+  const cartHeaderEl = cartEl ? cartEl.querySelector('.cart-header') : null;
+  if (cartItemsEl) cartItemsEl.style.display = 'none';
+  if (cartHeaderEl) cartHeaderEl.style.display = 'none';
+  if (cartFooterEl) {
+    cartFooterEl.style.borderTop = 'none';
+    cartFooterEl.innerHTML = `<div style="font-size:13px;font-weight:700;color:var(--text)">🛒 주문중 · 합계 <span style="color:var(--primary)">${total.toLocaleString()}</span>원</div><button onclick="toggleCartItems()" id="cartToggleBtn" style="background:var(--light);border:1.5px solid var(--primary);border-radius:16px;padding:5px 10px;font-size:12px;font-weight:600;color:var(--dark);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px">장바구니 <span id="cartToggleArrow" style="transition:transform .3s;display:inline-block">▼</span></button>`;
+  }
+
+  document.getElementById('inp').placeholder = '픽업예약 시간을 알려주세요!';
+  addBot(`📋 <strong>주문 내역</strong><br>${cart.map(i=>`🍗 ${i.name} x${i.qty} (${(i.price*i.qty).toLocaleString()}원)`).join('<br>')}<br><br>💰 합계: <strong>${total.toLocaleString()}원</strong><br><br><div style="background:#FEF3C7;border:1.5px solid #F59E0B;border-radius:12px;padding:12px 14px;margin-top:8px;font-size:14px;font-weight:600;color:#92400E;">⏰ 픽업 예약 시간을 알려주세요!<br><span style="font-size:12px;font-weight:400;color:#B45309;margin-top:4px;display:block">예) 오후 3시, 15:30, 지금바로</span></div>`);
 }
 
 // ── 주문 단계 처리 ──
@@ -346,12 +370,14 @@ function handleStep(text) {
   if (!orderState) return false;
   if (orderState.step==='time') {
     orderState.time=text; orderState.step='name';
-    addBot('👤 성함을 알려주세요!');
+    document.getElementById('inp').placeholder = '성함을 알려주세요!';
+    addBot('<div style="background:#E0F2FE;border:1.5px solid #38BDF8;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;color:#0C4A6E;">👤 성함을 알려주세요!</div>');
     return true;
   }
   if (orderState.step==='name') {
     orderState.name=text; orderState.step='phone';
-    addBot('📱 연락처를 알려주세요!<br><small style="color:#8B6A4E">예) 010-1234-5678</small>');
+    document.getElementById('inp').placeholder = '연락처를 알려주세요!';
+    addBot('<div style="background:#E0F2FE;border:1.5px solid #38BDF8;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;color:#0C4A6E;">📱 연락처를 알려주세요!<br><span style="font-size:12px;font-weight:400;color:#0369A1;margin-top:4px;display:block">예) 010-1234-5678</span></div>');
     return true;
   }
   if (orderState.step==='phone') {
@@ -416,6 +442,21 @@ async function finalOrder() {
   renderCart();
   orderState = null;
 
+  // placeholder 원래대로
+  document.getElementById('inp').placeholder = '픽업예약 시간을 알려주세요!';
+
+  // 장바구니 UI 복원
+  const cartElR = document.getElementById('cart');
+  const cartItemsElR = cartElR ? cartElR.querySelector('.cart-items') : null;
+  const cartHeaderElR = cartElR ? cartElR.querySelector('.cart-header') : null;
+  const cartFooterElR = cartElR ? cartElR.querySelector('.cart-footer') : null;
+  if (cartItemsElR) cartItemsElR.style.display = '';
+  if (cartHeaderElR) cartHeaderElR.style.display = '';
+  if (cartFooterElR) {
+    cartFooterElR.style.borderTop = '';
+    cartFooterElR.innerHTML = `<div class="cart-total">합계 <span id="cartTotal">0</span>원</div><button class="order-btn" onclick="startOrder()">주문하기 →</button>`;
+  }
+
   // 메뉴 다시 보이기
   const grid2 = document.getElementById('menuGrid');
   if (grid2) grid2.style.display = 'grid';
@@ -466,16 +507,32 @@ function showTyping() {
 }
 function hideTyping() { document.getElementById('typing')?.remove(); }
 
+function toggleCartItems() {
+  const cartItemsEl = document.getElementById('cartItems');
+  const cartHeaderEl = document.getElementById('cart').querySelector('.cart-header');
+  const arrowEl = document.getElementById('cartToggleArrow');
+  const isHidden = cartItemsEl.style.display === 'none' || cartItemsEl.style.display === '';
+  if (isHidden) {
+    cartItemsEl.style.display = 'flex';
+    if (cartHeaderEl) cartHeaderEl.style.display = 'flex';
+    if (arrowEl) arrowEl.style.transform = 'rotate(180deg)';
+  } else {
+    cartItemsEl.style.display = 'none';
+    if (cartHeaderEl) cartHeaderEl.style.display = 'none';
+    if (arrowEl) arrowEl.style.transform = 'rotate(0deg)';
+  }
+}
+
 function toggleMenu() {
   const grid = document.getElementById('menuGrid');
   const arrow = document.getElementById('menuArrow');
   const isOpen = grid.style.display !== 'none';
   if (isOpen) {
     grid.style.display = 'none';
-    arrow.style.transform = 'rotate(180deg)';
+    arrow.style.transform = 'rotate(0deg)';
   } else {
     grid.style.display = 'grid';
-    arrow.style.transform = 'rotate(0deg)';
+    arrow.style.transform = 'rotate(180deg)';
   }
 }
 
