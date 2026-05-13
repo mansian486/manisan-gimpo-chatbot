@@ -124,6 +124,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);min-height:100vh
 .map-btn:hover{background:#f9f9f9}
 .close-btn{width:100%;margin-top:6px;padding:13px;border-radius:14px;border:none;background:#F5F5F5;font-size:14px;font-weight:600;color:var(--sub);cursor:pointer;font-family:inherit}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -327,6 +328,16 @@ function startOrder() {
   const menuText = cart.map(i => `${i.name} x${i.qty}`).join(', ');
   const total = cart.reduce((s,i) => s+i.price*i.qty, 0);
   orderState = {menuText, total, step:'time'};
+
+  // 메뉴 강제로 숨기기
+  document.getElementById('menuGrid').style.display = 'none';
+  document.getElementById('menuArrow').style.transform = 'rotate(180deg)';
+
+  // 사이드메뉴 강제로 숨기기
+  document.getElementById('sideList').style.display = 'none';
+  document.getElementById('sideList').classList.remove('open');
+  document.getElementById('sideArrow').style.transform = 'rotate(0deg)';
+
   addBot(`📋 <strong>주문 내역</strong><br>${cart.map(i=>`🍗 ${i.name} x${i.qty} (${(i.price*i.qty).toLocaleString()}원)`).join('<br>')}<br><br>💰 합계: <strong>${total.toLocaleString()}원</strong><br><br>⏰ 픽업 예약 시간을 알려주세요!<br><small style="color:#8B6A4E">예) 오후 3시, 15:30</small>`);
 }
 
@@ -376,12 +387,36 @@ async function finalOrder() {
       }), mode:'no-cors'
     });
   } catch(e) {}
-  addBot(`✅ <strong>주문 완료!</strong><br><br>🍗 ${orderState.menuText}<br>⏰ 픽업: ${orderState.time}<br>👤 ${orderState.name}님<br>💰 ${orderState.total.toLocaleString()}원<br><br>맛있게 준비할게요! 감사합니다 😊🍗`);
+  // 주문완료 메시지 + 스크린샷 버튼
+  const orderSummary = `
+    <div id="orderResult" style="background:#fff8ee;border-radius:14px;padding:14px;margin-bottom:10px">
+      <div style="font-size:15px;font-weight:700;color:#2C1A0E;margin-bottom:8px">✅ 주문 완료!</div>
+      <div style="font-size:13px;color:#2C1A0E;line-height:1.8">
+        🍗 ${orderState.menuText.split(', ').join('<br>🍗 ')}<br>
+        ⏰ 픽업: ${orderState.time}<br>
+        👤 ${orderState.name}님<br>
+        💰 합계: ${orderState.total.toLocaleString()}원
+      </div>
+      <div style="margin-top:12px;padding:10px;background:#EF9F27;border-radius:10px;text-align:center;font-size:13px;font-weight:700;color:#2C1A0E">
+        🏪 매장에서 키오스크로 결제해 주세요
+      </div>
+      <div style="margin-top:8px;font-size:13px;color:#8B6A4E;text-align:center">맛있게 준비할게요! 감사합니다 😊🍗</div>
+    </div>
+    <button onclick="takeScreenshot()" style="width:100%;padding:11px;border-radius:12px;border:1.5px solid #EF9F27;background:#fff;font-size:13px;font-weight:700;color:#d4861a;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px">
+      📸 주문내역 스크린샷 저장
+    </button>`;
+
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.innerHTML = icon() + `<div class="bubble" style="max-width:90%">${orderSummary}</div>`;
+  msgsEl.appendChild(div);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+
   cart = [];
   renderCart();
   orderState = null;
 
-  // 메뉴 그리드 다시 보이기
+  // 메뉴 다시 보이기
   const grid2 = document.getElementById('menuGrid');
   if (grid2) grid2.style.display = 'grid';
   const mArrow = document.getElementById('menuArrow');
@@ -447,12 +482,12 @@ function toggleMenu() {
 function toggleSide() {
   const list = document.getElementById('sideList');
   const arrow = document.getElementById('sideArrow');
-  const isOpen = list.classList.contains('open');
+  const isOpen = list.style.display === 'flex';
   if (isOpen) {
-    list.classList.remove('open');
+    list.style.display = 'none';
     arrow.style.transform = 'rotate(0deg)';
   } else {
-    list.classList.add('open');
+    list.style.display = 'flex';
     arrow.style.transform = 'rotate(180deg)';
   }
 }
@@ -474,6 +509,20 @@ async function ask(text) {
     hideTyping();
     addBot('연결에 문제가 생겼어요. 잠시 후 다시 시도해 주세요.');
   }
+}
+
+function takeScreenshot() {
+  const target = document.querySelector('.wrap');
+  html2canvas(target, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#FDF8F0'
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = '마니산닭강정_주문내역.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
 }
 
 function send() {
