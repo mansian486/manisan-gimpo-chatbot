@@ -295,7 +295,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);min-height:100vh
 
   <!-- 기타버튼 -->
   <div class="etc">
-    <button class="qbtn" onclick="ask('품질 철학이 뭐야?')">✅ 품질철학</button>
+    <button class="qbtn" onclick="showOrigin()">🌍 원산지표기</button>
     <button class="qbtn" onclick="ask('전체 메뉴 보여줘')">📋 전체메뉴</button>
     <button class="qbtn" onclick="showMap()">🗺️ 오시는길</button>
   </div>
@@ -830,6 +830,19 @@ function closeAdmin() {
 
 // 페이지 로드 시 품절 상태 반영
 window.addEventListener('load', refreshSoldOut);
+
+
+// 원산지 표기 안내
+function showOrigin() {
+  addBot(
+    '🌍 <strong>원산지 및 알레르기 안내</strong><br><br>' +
+    '📦 <strong>원산지 표기</strong><br>' +
+    '&nbsp;&nbsp;• 닭다리살 : <strong>브라질산</strong><br><br>' +
+    '⚠️ <strong>알레르기 유발물질</strong><br>' +
+    '&nbsp;&nbsp;닭 · 토마토 · 콩 · 밀 · 옥수수 · 땅콩<br><br>' +
+    '<small style="color:#8B6A4E">※ 알레르기가 있으신 분은 주문 전 꼭 확인해 주세요.</small>'
+  );
+}
 
 </script>
 
