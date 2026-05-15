@@ -436,6 +436,8 @@ function renderCart() {
 }
 
 function startOrder() {
+  // 입력창 다시 보이기
+  document.querySelector('.inp-area').style.display = '';
   if (cart.length === 0) {
     // 빈 장바구니 팝업
     const pop = document.createElement('div');
@@ -595,10 +597,17 @@ function handleStep(text) {
   }
   if (orderState.step==='name') {
     orderState.name=text; orderState.step='phone';
-    document.getElementById('inp').setAttribute('inputmode','numeric');
-    document.getElementById('inp').setAttribute('type','tel');
-    document.getElementById('inp').placeholder = '연락처를 알려주세요!';
     addBot('<div style="background:#E0F2FE;border:1.5px solid #38BDF8;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;color:#0C4A6E;">📱 연락처를 알려주세요!<br><span style="font-size:12px;font-weight:400;color:#0369A1;margin-top:4px;display:block">예) 010-1234-5678</span></div>');
+    // 키보드 전환: blur → type/inputmode 변경 → focus 순서로 해야 숫자 키보드로 전환됨
+    const inp = document.getElementById('inp');
+    inp.blur();
+    setTimeout(() => {
+      inp.setAttribute('type','tel');
+      inp.setAttribute('inputmode','numeric');
+      inp.placeholder = '연락처를 알려주세요!';
+      msgsEl.scrollTop = msgsEl.scrollHeight;
+      inp.focus();
+    }, 100);
     return true;
   }
   if (orderState.step==='phone') {
@@ -681,8 +690,11 @@ async function finalOrder() {
   renderCart();
   orderState = null;
 
-  // placeholder 원래대로
+  // placeholder 원래대로 + 입력창 숨기기 (주문완료 후)
   document.getElementById('inp').placeholder = '메뉴를 고른후에 주문하기를 눌러주세요';
+  document.getElementById('inp').setAttribute('type','text');
+  document.getElementById('inp').removeAttribute('inputmode');
+  document.querySelector('.inp-area').style.display = 'none';
 
   // 장바구니 UI 복원
   const cartElR = document.getElementById('cart');
