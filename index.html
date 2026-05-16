@@ -544,6 +544,7 @@ function selectHour(h) {
     </div>
     <button onclick="document.getElementById('minPop').remove()" style="background:#F5F5F5;color:#8B6A4E;border:none;border-radius:10px;padding:9px 20px;font-size:13px;cursor:pointer;font-family:inherit;">취소</button>
   </div>`;
+  pop.addEventListener('click', e => { if (e.target === pop) pop.remove(); });
   document.body.appendChild(pop);
 }
 
@@ -569,6 +570,7 @@ function confirmTimeSelection(timeStr) {
       <button onclick="confirmTimeDone('${timeStr}')" style="flex:1;background:#EF9F27;color:#2C1A0E;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">확인!</button>
     </div>
   </div>`;
+  pop.addEventListener('click', e => { if (e.target === pop) pop.remove(); });
   document.body.appendChild(pop);
 }
 
@@ -581,7 +583,8 @@ function confirmTimeDone(timeStr) {
   addUser(`⏰ ${timeStr}`);
   document.getElementById('inp').placeholder = '성함을 알려주세요!';
   addBot('<div style="background:#E0F2FE;border:1.5px solid #38BDF8;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;color:#0C4A6E;">👤 성함을 알려주세요!</div>');
-  setTimeout(() => { msgsEl.scrollTop = msgsEl.scrollHeight; document.getElementById('inp').focus(); }, 100);
+  document.getElementById('inp').focus();
+  setTimeout(() => { msgsEl.scrollTop = msgsEl.scrollHeight; }, 100);
 }
 
 // ── 주문 단계 처리 ──
