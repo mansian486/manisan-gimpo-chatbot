@@ -887,11 +887,27 @@ const ALL_MENUS = [
   '치즈볼','치즈뿌린치즈볼','웅녀떡볶이'
 ];
 
-// 품절 상태 (메모리 저장 – 페이지 새로고침 시 초기화)
-let soldOutSet = new Set(JSON.parse(localStorage.getItem('soldOut') || '[]'));
+// 품절 상태 (서버 공유)
+let soldOutSet = new Set();
 
-function saveSoldOut() {
-  localStorage.setItem('soldOut', JSON.stringify([...soldOutSet]));
+async function loadSoldOut() {
+  try {
+    const res = await fetch(WEBHOOK);
+    const data = await res.json();
+    if (Array.isArray(data)) soldOutSet = new Set(data);
+  } catch(e) {}
+  refreshSoldOut();
+}
+
+async function saveSoldOut() {
+  try {
+    await fetch(WEBHOOK, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({type: 'soldout', soldOut: [...soldOutSet]}),
+      mode: 'no-cors'
+    });
+  } catch(e) {}
 }
 
 // 메뉴 버튼 클릭 → 품절이면 안내, 아니면 기존 addCart
@@ -976,8 +992,8 @@ function closeAdmin() {
   document.getElementById('adminModal').classList.remove('open');
 }
 
-// 페이지 로드 시 품절 상태 반영
-window.addEventListener('load', refreshSoldOut);
+// 페이지 로드 시 품절 상태 반영 (서버에서 불러오기)
+window.addEventListener('load', loadSoldOut);
 
 
 // 원산지 표기 안내
