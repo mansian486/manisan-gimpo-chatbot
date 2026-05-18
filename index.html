@@ -607,9 +607,10 @@ function handleStep(text) {
       inp.setAttribute('type','tel');
       inp.setAttribute('inputmode','numeric');
       inp.placeholder = '연락처를 알려주세요!';
-      msgsEl.scrollTop = msgsEl.scrollHeight;
       inp.focus();
     }, 100);
+    // 키보드 올라온 후 스크롤 (키보드 애니메이션 완료 후 실행)
+    setTimeout(() => { msgsEl.scrollTop = msgsEl.scrollHeight; }, 450);
     return true;
   }
   if (orderState.step==='phone') {
