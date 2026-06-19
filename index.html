@@ -890,6 +890,18 @@ const ALL_MENUS = [
 // 품절 상태 (서버 공유)
 let soldOutSet = new Set();
 
+// 매일 오전 6시 자동 품절 해제 체크
+function checkAutoReset() {
+  const now = new Date();
+  const todayKey = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate();
+  const lastReset = localStorage.getItem('soldOutResetDate');
+  if (now.getHours() >= 6 && lastReset !== todayKey) {
+    localStorage.setItem('soldOutResetDate', todayKey);
+    return true; // 오늘 아직 초기화 안 했고, 6시 지남 → 초기화 필요
+  }
+  return false;
+}
+
 async function loadSoldOut() {
   // 먼저 로컬 캐시로 즉시 표시 (빠른 반응)
   const cached = localStorage.getItem('soldOut');
@@ -905,6 +917,13 @@ async function loadSoldOut() {
       refreshSoldOut();
     }
   } catch(e) {}
+
+  // 오전 6시 자동 초기화 (당일 첫 접속자가 트리거, 서버까지 반영되어 모든 손님 화면에 동기화됨)
+  if (checkAutoReset() && soldOutSet.size > 0) {
+    soldOutSet.clear();
+    refreshSoldOut();
+    saveSoldOut();
+  }
 }
 
 async function saveSoldOut() {
